@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RUHARA | Khusboo esi jo rooh ko choh le</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --gold: #D4AF37; --dark-gold: #b5952f; --black: #0a0a0a;
+            --light-grey: #f9f9f9; --white: #ffffff; --text-color: #333;
+        }
+        body { font-family: 'Poppins', sans-serif; background-color: var(--light-grey); color: var(--text-color); overflow-x: hidden; }
+        h1, h2, h3 { font-family: 'Playfair Display', serif; }
+
+        /* ==================================================== */
+        /* --- 3D CINEMATIC PRELOADER --- */
+        /* ==================================================== */
+        #preloader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #000000 100%);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 9999; transition: opacity 1s ease-in-out, visibility 1s;
+        }
+        .preloader-box { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .gold-ring {
+            position: absolute; width: 180px; height: 180px;
+            border: 2px solid rgba(212, 175, 55, 0.1); border-top: 2px solid var(--gold);
+            border-radius: 50%; animation: spin 2s linear infinite;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+        }
+        .inner-ring {
+            position: absolute; width: 150px; height: 150px;
+            border: 1px solid rgba(212, 175, 55, 0.05); border-bottom: 1px solid var(--gold);
+            border-radius: 50%; animation: spinReverse 3s linear infinite;
+        }
+        .preloader-logo {
+            color: var(--gold); font-size: 3.5rem; font-family: 'Playfair Display', serif;
+            letter-spacing: 8px; font-weight: 700; opacity: 0;
+            animation: zoomFadeIn 2s forwards, glowPulse 2s infinite alternate 2s; z-index: 2;
+        }
+        .preloader-tagline-urdu {
+            color: var(--white); font-family: 'Noto Nastaliq Urdu', serif;
+            font-size: 1.8rem; margin-top: 20px; opacity: 0;
+            animation: slideUp 1.5s forwards 1s; direction: rtl; z-index: 2;
+            text-shadow: 0 0 10px rgba(255,255,255,0.3);
+        }
+        .loading-bar {
+            width: 0%; height: 2px; background: var(--gold);
+            margin-top: 30px; animation: loadBar 3.5s ease-in-out forwards;
+            box-shadow: 0 0 10px var(--gold);
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes spinReverse { 100% { transform: rotate(-360deg); } }
+        @keyframes zoomFadeIn { 0% { opacity: 0; transform: scale(0.5); filter: blur(5px); } 100% { opacity: 1; transform: scale(1); filter: blur(0); } }
+        @keyframes glowPulse { 0% { text-shadow: 0 0 10px rgba(212, 175, 55, 0.5); } 100% { text-shadow: 0 0 30px rgba(212, 175, 55, 1), 0 0 50px rgba(212, 175, 55, 0.5); } }
+        @keyframes slideUp { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
+        @keyframes loadBar { 0% { width: 0%; } 100% { width: 100%; } }
+        .preloader-hidden { opacity: 0; visibility: hidden; }
+
+        /* Header */
+        header { background-color: rgba(10, 10, 10, 0.95); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; position: fixed; width: 100%; top: 0; z-index: 1000; border-bottom: 1px solid rgba(212, 175, 55, 0.3); backdrop-filter: blur(10px); }
+        .logo { color: var(--gold); font-size: 1.8rem; font-family: 'Playfair Display', serif; letter-spacing: 2px; text-decoration: none; font-weight: 700; }
+        .cart-icon { color: var(--white); font-size: 1.5rem; cursor: pointer; position: relative; transition: transform 0.2s; }
+        .cart-count { position: absolute; top: -10px; right: -15px; background-color: var(--gold); color: var(--black); font-size: 0.8rem; font-weight: bold; padding: 2px 7px; border-radius: 50%; font-family: 'Poppins', sans-serif; }
+
+        /* Hero */
+        .hero { height: 60vh; background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1594035910387-fea47794261f?q=80&w=1920&auto=format&fit=crop') center/cover; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 20px; margin-top: 60px; }
+        .hero h1 { color: var(--gold); font-size: 4rem; margin-bottom: 10px; letter-spacing: 3px; }
+        .hero p { color: var(--white); font-size: 1.2rem; letter-spacing: 1px; font-weight: 300; }
+
+        /* ===================== SECTIONS ===================== */
+        .product-section { padding: 80px 5%; background: var(--white); }
+        .product-section.alt { background: #f0f0f0; }
+
+        .section-title { text-align: center; font-size: 2.5rem; margin-bottom: 55px; color: var(--black); position: relative; }
+        .section-title::after { content: ''; width: 80px; height: 3px; background-color: var(--gold); position: absolute; bottom: -15px; left: 50%; transform: translateX(-50%); }
+
+        /* Sub heading (Standard / Wide) */
+        .sub-group + .sub-group { margin-top: 75px; }
+        .sub-title {
+            display: flex; align-items: center; justify-content: center; gap: 16px;
+            font-size: 1.15rem; letter-spacing: 3px; text-transform: uppercase;
+            color: var(--dark-gold); margin-bottom: 35px; font-weight: 600;
+        }
+        .sub-title::before, .sub-title::after {
+            content: ''; height: 1px; width: 60px;
+            background: linear-gradient(to right, transparent, var(--gold), transparent);
+        }
+
+        /* ===================== GRID ===================== */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+            gap: 28px;
+            align-items: stretch;
+        }
+        /* Wide images ka grid (thora bara column) */
+        .product-grid.wide-grid {
+            grid-template-columns: repeat(auto-fill, minmax(370px, 1fr));
+        }
+
+        /* ===================== CARD ===================== */
+        .product-card {
+            background: var(--white); border-radius: 12px; overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex; flex-direction: column; border: 1px solid #eee;
+        }
+        .product-card:hover { transform: translateY(-8px); box-shadow: 0 18px 34px rgba(0,0,0,0.12); }
+
+        /* ===== IMAGE BOX: kuch bhi cut nahi hoga, distort nahi hoga ===== */
+        .product-img-wrapper {
+            width: 100%;
+            aspect-ratio: 4 / 5;                 /* Standard bottles ke liye */
+            background: radial-gradient(circle at 50% 40%, #ffffff 0%, #f1f1f1 100%);
+            display: flex; align-items: center; justify-content: center;
+            padding: 14px; overflow: hidden; position: relative;
+        }
+        /* Wide (landscape) images ke liye alag box */
+        .product-card.is-wide .product-img-wrapper { aspect-ratio: 16 / 10; padding: 10px; }
+
+        .product-img {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto; height: auto;
+            object-fit: contain;                  /* poori tasveer, koi cut nahi */
+            transition: transform 0.45s ease;
+        }
+        .product-card:hover .product-img { transform: scale(1.07); }
+
+        /* ===== INFO ===== */
+        .product-info { padding: 20px; text-align: center; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; background: #fff; }
+        .product-name { font-size: 1.25rem; font-family: 'Playfair Display', serif; margin-bottom: 6px; color: var(--black); text-transform: uppercase; letter-spacing: .5px; }
+        .product-desc { font-size: 0.82rem; color: #777; margin-bottom: 15px; }
+        .price { font-size: 1.35rem; font-weight: 600; color: var(--dark-gold); margin-bottom: 15px; }
+
+        .button-group { display: flex; gap: 10px; }
+        .btn-add { background-color: transparent; color: var(--black); border: 1px solid var(--black); padding: 10px; font-family: 'Poppins', sans-serif; font-weight: 500; cursor: pointer; transition: all 0.3s ease; flex: 1; border-radius: 5px; font-size: .88rem; }
+        .btn-add:hover { background-color: #eee; }
+        .btn-buy { background-color: var(--gold); color: var(--black); border: 1px solid var(--gold); padding: 10px; font-family: 'Poppins', sans-serif; font-weight: 600; cursor: pointer; transition: all 0.3s ease; flex: 1; border-radius: 5px; font-size: .88rem; }
+        .btn-buy:hover { background-color: var(--dark-gold); border-color: var(--dark-gold); }
+
+        /* ===================== CART MODAL ===================== */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 15px; }
+        .modal-content { background: var(--white); width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; border-radius: 10px; padding: 30px; position: relative; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+        .close-btn { position: absolute; top: 15px; right: 20px; font-size: 1.8rem; cursor: pointer; color: #333; transition: color 0.2s; line-height: 1; }
+        .close-btn:hover { color: red; }
+
+        .cart-items { margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 20px; max-height: 220px; overflow-y: auto; }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 0.92rem; background: #f9f9f9; padding: 10px 12px; border-radius: 6px; gap: 10px; }
+        .ci-left { display: flex; flex-direction: column; text-align: left; }
+        .ci-name { font-weight: 600; color: #222; }
+        .ci-qty { font-size: .78rem; color: #888; }
+        .ci-right { display: flex; align-items: center; gap: 10px; white-space: nowrap; font-weight: 600; color: var(--dark-gold); }
+        .ci-remove { background: none; border: none; color: #bbb; font-size: 1.2rem; cursor: pointer; line-height: 1; transition: color .2s; }
+        .ci-remove:hover { color: #e74c3c; }
+
+        .cart-summary { margin-bottom: 20px; background: #fafafa; padding: 20px; border-radius: 8px; border: 1px solid #eee; }
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 1rem; }
+        .summary-row.total { font-weight: 700; font-size: 1.25rem; color: var(--black); border-top: 2px solid #ddd; padding-top: 10px; margin-top: 10px; }
+
+        /* Form */
+        .order-form h3 { margin-bottom: 20px; text-align: center; color: var(--dark-gold); font-size: 1.5rem; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 0.9rem; margin-bottom: 5px; font-weight: 500; color: #555; }
+        .form-group input, .form-group textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 5px; font-family: 'Poppins', sans-serif; font-size: 0.95rem; transition: border-color 0.3s; }
+        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--gold); }
+        .btn-submit { background-color: var(--black); color: var(--gold); border: none; padding: 15px; width: 100%; font-size: 1.05rem; font-weight: 600; cursor: pointer; border-radius: 5px; transition: background 0.3s, color 0.3s; margin-top: 15px; }
+        .btn-submit:hover { background-color: var(--gold); color: var(--black); }
+
+        /* Footer */
+        footer { background: var(--black); color: #777; text-align: center; padding: 30px 20px; font-size: 0.9rem; border-top: 1px solid var(--gold); }
+
+        /* ===================== MOBILE ===================== */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .preloader-logo { font-size: 2.5rem; letter-spacing: 5px; }
+            .preloader-tagline-urdu { font-size: 1.3rem; }
+            .section-title { font-size: 1.9rem; margin-bottom: 45px; }
+            .sub-title { font-size: .95rem; letter-spacing: 2px; }
+            .sub-title::before, .sub-title::after { width: 30px; }
+            .product-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
+            .product-grid.wide-grid { grid-template-columns: 1fr; gap: 20px; }
+            .product-img-wrapper { aspect-ratio: 1 / 1; padding: 8px; }
+            .product-card.is-wide .product-img-wrapper { aspect-ratio: 16 / 10; }
+            .product-info { padding: 14px 12px; }
+            .product-name { font-size: 1rem; }
+            .product-desc { font-size: .72rem; margin-bottom: 10px; }
+            .price { font-size: 1.1rem; margin-bottom: 10px; }
+            .button-group { flex-direction: column; gap: 8px; }
+            .btn-add, .btn-buy { padding: 9px 6px; font-size: .78rem; }
+            .modal-content { padding: 22px 18px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Cinematic Preloader -->
+    <div id="preloader">
+        <div class="preloader-box">
+            <div class="gold-ring"></div>
+            <div class="inner-ring"></div>
+            <div class="preloader-logo">RUHARA</div>
+        </div>
+        <div class="preloader-tagline-urdu">خوشبو ایسی جو روح کو چھو لے</div>
+        <div class="loading-bar"></div>
+    </div>
+
+    <header>
+        <a href="#" class="logo">RUHARA</a>
+        <div class="cart-icon" onclick="toggleCart()">
+            <i class="fas fa-shopping-bag"></i>
+            <span class="cart-count" id="cartCount">0</span>
+        </div>
+    </header>
+
+    <section class="hero">
+        <h1>RUHARA</h1>
+        <p>Premium Quality | Long Lasting Perfumes</p>
+    </section>
+
+    <!-- ============ CATEGORY 1 : PERFUMES ============ -->
+    <section class="product-section" id="perfumes-section">
+        <h2 class="section-title">Premium Perfumes</h2>
+
+        <!-- Standard (square / portrait) images -->
+        <div class="sub-group" data-group>
+            <h3 class="sub-title">Signature Bottles</h3>
+            <div class="product-grid" id="perfumeGrid"></div>
+        </div>
+
+        <!-- Wide (landscape) images -->
+        <div class="sub-group" data-group>
+            <h3 class="sub-title">Wide Collection</h3>
+            <div class="product-grid wide-grid" id="perfumeWideGrid"></div>
+        </div>
+    </section>
+
+    <!-- ============ CATEGORY 2 : TESTERS ============ -->
+    <section class="product-section alt" id="testers-section">
+        <h2 class="section-title">Tester Boxes</h2>
+
+        <div class="sub-group" data-group>
+            <h3 class="sub-title">Standard Testers</h3>
+            <div class="product-grid" id="testerGrid"></div>
+        </div>
+
+        <div class="sub-group" data-group>
+            <h3 class="sub-title">Wide Testers</h3>
+            <div class="product-grid wide-grid" id="testerWideGrid"></div>
+        </div>
+    </section>
+
+    <!-- Cart Modal -->
+    <div class="modal-overlay" id="cartModal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="toggleCart()">&times;</span>
+            <h2 style="text-align:center; margin-bottom: 20px; font-family: 'Playfair Display';">Your Order Details</h2>
+
+            <div class="cart-items" id="cartItemsContainer"></div>
+
+            <div class="cart-summary">
+                <div class="summary-row">
+                    <span>Subtotal:</span>
+                    <span id="subtotal">Rs 0</span>
+                </div>
+                <div class="summary-row">
+                    <span>Shipping Charges:</span>
+                    <span id="shipping">Rs 300</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Total Amount:</span>
+                    <span id="grandTotal">Rs 0</span>
+                </div>
+            </div>
+
+            <div class="order-form" id="orderFormSection">
+                <h3>Delivery Details</h3>
+                <form id="checkoutForm" onsubmit="placeOrder(event)">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="custName" required placeholder="Enter your full name">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number (WhatsApp)</label>
+                        <input type="tel" id="custPhone" required placeholder="03xx-xxxxxxx">
+                    </div>
+                    <div class="form-group">
+                        <label>Complete Address</label>
+                        <textarea id="custAddress" rows="2" required placeholder="House no, Street, Area"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>City</label>
+                        <input type="text" id="custCity" required placeholder="Your City">
+                    </div>
+                    <button type="submit" class="btn-submit">Confirm Order (Cash on Delivery)</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 RUHARA Fragrance. All Rights Reserved.</p>
+        <p style="margin-top: 5px; color: var(--gold); font-family: 'Noto Nastaliq Urdu'; font-size: 1.2rem;">خوشبو ایسی جو روح کو چھو لے</p>
+    </footer>
+
+    <script>
+        /* ---------- PRELOADER ---------- */
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('preloader').classList.add('preloader-hidden');
+            }, 4000);
+        });
+
+        /* ---------- PRODUCTS ---------- */
+        const products = [
+            { id: 1,  name: "Channel #2",        desc: "Premium Quality 50ML", price: 2000, category: "perfume", img: "1.jpg" },
+            { id: 2,  name: "Silver Scent",      desc: "Premium Quality 50ML", price: 2000, category: "perfume", img: "2.jpg" },
+            { id: 3,  name: "Romance",           desc: "Premium Quality 50ML", price: 2000, category: "perfume", img: "3.jpg" },
+            { id: 4,  name: "D-Desire",          desc: "Premium Quality 50ML", price: 2000, category: "perfume", img: "4.jpg" },
+            { id: 5,  name: "Green Men",         desc: "Premium Quality 50ML", price: 2000, category: "perfume", img: "5.jpg" },
+            { id: 6,  name: "Gucci Flora",       desc: "Premium Quality 50ML", price: 2000, category: "perfume", img: "6.jpg" },
+            { id: 8,  name: "Zarar J.",          desc: "Premium Quality 50ML", price: 2000, category: "perfume", img: "8.jpg" },
+            { id: 9,  name: "Creed Aventus",     desc: "Premium Quality 50ML", price: 2000, category: "perfume", img: "9.jpg" },
+            { id: 10, name: "Royal Musk",        desc: "Premium Quality 50ML", price: 2000, category: "perfume", img: "10.jpg" },
+            { id: 11, name: "Baccarat",          desc: "Premium Quality 50ML", price: 2000, category: "perfume", img: "11.jpg" },
+            { id: 12, name: "Paradise Blaze",    desc: "Premium Quality 50ML", price: 2250, category: "perfume", img: "12.jpg" },
+            { id: 13, name: "Imagination",       desc: "Premium Quality 50ML", price: 2000, category: "perfume", img: "13.jpg" },
+            { id: 14, name: "Bakhoor",           desc: "Premium Quality 50ML", price: 2000, category: "perfume", img: "14.jpg" },
+            { id: 15, name: "Cool Water",        desc: "Premium Quality 50ML", price: 2000, category: "perfume", img: "15.jpg" },
+            { id: 16, name: "Velvet Desire 540", desc: "Premium Quality 50ML", price: 2500, category: "perfume", img: "16.jpg" },
+            { id: 17, name: "Dio",               desc: "Premium Quality 50ML", price: 3000, category: "perfume", img: "17.jpg" },
+            { id: 18, name: "Silk Musk",         desc: "Premium Quality 50ML", price: 2750, category: "perfume", img: "18.jpg" },
+            { id: 19, name: "Royal Oud",         desc: "Premium Quality 50ML", price: 2000, category: "perfume", img: "19.jpg" },
+            { id: 20, name: "Blue De Channel",   desc: "Premium Quality 50ML", price: 2000, category: "perfume", img: "20.jpg" },
+            { id: 21, name: "Black Musk",            desc: "Perfume Tester Box", price: 1500, category: "tester", img: "21.jpg" },
+            { id: 22, name: "Fog Paradise Tester",   desc: "Perfume Tester Box", price: 1500, category: "tester", img: "22.jpg" },
+            { id: 23, name: "Lord & Imperial Tester",desc: "Perfume Tester Box", price: 1500, category: "tester", img: "23.jpg" },
+            { id: 24, name: "Janan Oud Tester",      desc: "Perfume Tester Box", price: 1500, category: "tester", img: "24.jpg" }
+        ];
+
+        /* ---------- GRID REFERENCES ---------- */
+        const grids = {
+            perfume: {
+                standard: document.getElementById('perfumeGrid'),
+                wide:     document.getElementById('perfumeWideGrid')
+            },
+            tester: {
+                standard: document.getElementById('testerGrid'),
+                wide:     document.getElementById('testerWideGrid')
+            }
+        };
+
+        const PLACEHOLDER = 'https://via.placeholder.com/400x400?text=Image+Not+Found';
+        const WIDE_THRESHOLD = 1.10;   // width/height > 1.10  =>  wide picture
+
+        /* ---------- CARD BANANA ---------- */
+        function createCard(product) {
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            card.innerHTML = `
+                <div class="product-img-wrapper">
+                    <img class="product-img" alt="${product.name}" src="${product.img}">
+                </div>
+                <div class="product-info">
+                    <div>
+                        <h3 class="product-name">${product.name}</h3>
+                        <p class="product-desc">${product.desc}</p>
+                    </div>
+                    <div>
+                        <div class="price">Rs ${product.price.toLocaleString('en-PK')}</div>
+                        <div class="button-group">
+                            <button class="btn-add" type="button">Add to Cart</button>
+                            <button class="btn-buy" type="button">Buy Now</button>
+                        </div>
+                    </div>
+                </div>`;
+
+            card.querySelector('.btn-add').addEventListener('click', () => addToCart(product.id));
+            card.querySelector('.btn-buy').addEventListener('click', () => buyNow(product.id));
+            return card;
+        }
+
+        /* ---------- IMAGE LOAD + AUTO SECTION SPLIT ---------- */
+        function loadProduct(product) {
+            return new Promise(resolve => {
+                const card = createCard(product);
+                const img  = card.querySelector('.product-img');
+                let settled = false;
+
+                function place(isWide) {
+                    if (settled) return;
+                    settled = true;
+
+                    const group  = grids[product.category] || grids.perfume;
+                    const target = isWide ? group.wide : group.standard;
+
+                    if (isWide) card.classList.add('is-wide');
+                    target.appendChild(card);
+                    resolve();
+                }
+
+                img.addEventListener('load', () => {
+                    const ratio = img.naturalWidth / img.naturalHeight;
+                    place(ratio > WIDE_THRESHOLD);
+                });
+
+                img.addEventListener('error', () => {
+                    img.src = PLACEHOLDER;
+                    place(false);
+                });
+
+                /* Agar image cache se foran ready ho */
+                if (img.complete && img.naturalWidth > 0) {
+                    place((img.naturalWidth / img.naturalHeight) > WIDE_THRESHOLD);
+                }
+
+                /* Safety fallback (6 sec) */
+                setTimeout(() => place(false), 6000);
+            });
+        }
+
+        /* ---------- RENDER ---------- */
+        Promise.all(products.map(loadProduct)).then(() => {
+            /* Khali sub-section chhupa do */
+            document.querySelectorAll('.sub-group[data-group]').forEach(group => {
+                const grid = group.querySelector('.product-grid');
+                if (grid && grid.children.length === 0) group.style.display = 'none';
+            });
+        });
+
+        /* ---------- CART LOGIC ---------- */
+        let cart = [];
+        const SHIPPING_CHARGE = 300;
+
+        function toggleCart() {
+            const modal = document.getElementById('cartModal');
+            if (modal.style.display === 'flex') {
+                modal.style.display = 'none';
+            } else {
+                modal.style.display = 'flex';
+                updateCartUI();
+            }
+        }
+
+        function addToCart(id) {
+            const product = products.find(p => p.id === id);
+            if (!product) return;
+
+            const existingItem = cart.find(item => item.id === id);
+            if (existingItem) existingItem.quantity += 1;
+            else cart.push({ ...product, quantity: 1 });
+
+            updateCartUI();
+
+            const cartIcon = document.querySelector('.cart-icon');
+            cartIcon.style.transform = 'scale(1.3)';
+            setTimeout(() => cartIcon.style.transform = 'scale(1)', 200);
+        }
+
+        function removeFromCart(id) {
+            cart = cart.filter(item => item.id !== id);
+            updateCartUI();
+        }
+
+        function buyNow(id) {
+            addToCart(id);
+            toggleCart();
+            setTimeout(() => {
+                document.getElementById('orderFormSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                const form = document.getElementById('checkoutForm');
+                form.style.boxShadow = '0 0 15px rgba(212, 175, 55, 0.5)';
+                setTimeout(() => form.style.boxShadow = 'none', 1500);
+            }, 400);
+        }
+
+        function updateCartUI() {
+            const cartItemsContainer = document.getElementById('cartItemsContainer');
+            const cartCount   = document.getElementById('cartCount');
+            const subtotalEl  = document.getElementById('subtotal');
+            const grandTotalEl = document.getElementById('grandTotal');
+            const shippingEl  = document.getElementById('shipping');
+
+            cartItemsContainer.innerHTML = '';
+            let totalQty = 0;
+            let subtotal = 0;
+
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = '<p style="text-align:center; color:#777; padding: 20px 0;">Your cart is empty. Please add products.</p>';
+            } else {
+                cart.forEach(item => {
+                    totalQty += item.quantity;
+                    subtotal += item.price * item.quantity;
+
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'cart-item';
+                    itemDiv.innerHTML = `
+                        <div class="ci-left">
+                            <span class="ci-name">${item.name}</span>
+                            <span class="ci-qty">Qty: ${item.quantity} × Rs ${item.price}</span>
+                        </div>
+                        <div class="ci-right">
+                            <span>Rs ${(item.price * item.quantity).toLocaleString('en-PK')}</span>
+                            <button class="ci-remove" title="Remove">&times;</button>
+                        </div>`;
+                    itemDiv.querySelector('.ci-remove').addEventListener('click', () => removeFromCart(item.id));
+                    cartItemsContainer.appendChild(itemDiv);
+                });
+            }
+
+            cartCount.innerText = totalQty;
+            subtotalEl.innerText = `Rs ${subtotal.toLocaleString('en-PK')}`;
+
+            if (subtotal > 0) {
+                shippingEl.innerText = `Rs ${SHIPPING_CHARGE}`;
+                grandTotalEl.innerText = `Rs ${(subtotal + SHIPPING_CHARGE).toLocaleString('en-PK')}`;
+            } else {
+                shippingEl.innerText = 'Rs 0';
+                grandTotalEl.innerText = 'Rs 0';
+            }
+        }
+
+        /* ---------- ORDER VIA WHATSAPP ---------- */
+        function placeOrder(event) {
+            event.preventDefault();
+            if (cart.length === 0) {
+                alert("Aapka cart khali hai. Pehle koi perfume select karein.");
+                return;
+            }
+
+            const name    = document.getElementById('custName').value.trim();
+            const phone   = document.getElementById('custPhone').value.trim();
+            const address = document.getElementById('custAddress').value.trim();
+            const city    = document.getElementById('custCity').value.trim();
+
+            let subtotal = 0;
+            let orderDetails = '';
+
+            cart.forEach(item => {
+                const lineTotal = item.price * item.quantity;
+                subtotal += lineTotal;
+                orderDetails += `• ${item.name} (${item.quantity} pcs) — Rs ${lineTotal}\n`;
+            });
+
+            const total = subtotal + SHIPPING_CHARGE;
+
+            const message = `*NEW ORDER — RUHARA FRAGRANCE*\n\n` +
+                            `*Customer Details:*\n` +
+                            `Name: ${name}\n` +
+                            `Phone: ${phone}\n` +
+                            `City: ${city}\n` +
+                            `Address: ${address}\n\n` +
+                            `*Order Summary:*\n${orderDetails}\n` +
+                            `Subtotal: Rs ${subtotal}\n` +
+                            `Shipping: Rs ${SHIPPING_CHARGE}\n` +
+                            `*TOTAL AMOUNT: Rs ${total}* (Cash on Delivery)\n\n` +
+                            `"Khushboo aisi jo rooh ko chhoo le!"`;
+
+            /* 👇 YAHAN APNA WHATSAPP NUMBER DAALEIN (country code ke sath, + nahi) */
+            const myWhatsAppNumber = "923003992381";
+            const whatsappUrl = `https://wa.me/${myWhatsAppNumber}?text=${encodeURIComponent(message)}`;
+
+            window.open(whatsappUrl, '_blank');
+
+            cart = [];
+            document.getElementById('checkoutForm').reset();
+            updateCartUI();
+            toggleCart();
+            alert("Order request sent! Please confirm on WhatsApp.");
+        }
+    </script>
+</body>
+</html>
